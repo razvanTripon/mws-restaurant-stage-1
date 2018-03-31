@@ -18,6 +18,7 @@ body {
   line-height: 1.5;
   min-height: 100%;
   position: relative;
+
   display: flex;
   flex-direction: column;
 }
@@ -131,7 +132,7 @@ nav h1 a {
   text-align: center;
   width: 100%;
   padding: 0.2em 1em;
-  background-color: #252831;
+  background-color: #252832;
 }
 
 .filterClass {
