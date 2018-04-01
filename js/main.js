@@ -160,7 +160,7 @@ createRestaurantHTML = (restaurant) => {
 
   const tagPICTURE = document.createElement('picture');
   const urlAdress = DBHelper.imageUrlForRestaurant(restaurant);
-  tagPICTURE.innerHTML = `<img class="restaurantImg"  alt="Restaurant ${restaurant.name} picture"  srcset="${urlAdress}_small@1x.jpg 1x,  ${urlAdress}_small@2x.jpg 2x" src="${urlAdress}_small@1x.jpg">`;
+  tagPICTURE.innerHTML = `<img class="restaurantImg"  alt="${restaurant.alt}"  srcset="${urlAdress}_small@1x.jpg 1x,  ${urlAdress}_small@2x.jpg 2x" src="${urlAdress}_small@1x.jpg">`;
   tagPICTURE.className = 'restaurantPict';
   tagDIV.append(tagPICTURE);
 
