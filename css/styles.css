@@ -164,8 +164,9 @@ nav h1 a {
   border: 1px solid #fff;
 }
 .filterOptions select:focus {
-  box-shadow: 0 0 2pt 2pt #252832;    
-}
+  box-shadow: 0 0 2pt 1pt #444;    
+  background-color: beige;
+ }
 
 @media (min-width:480px)  { 
   .filterOptions {
