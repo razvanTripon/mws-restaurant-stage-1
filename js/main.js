@@ -136,10 +136,11 @@ resetRestaurants = (restaurants) => {
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const UL = document.getElementById('restaurants-list');
-  let tabindex=10;
+  //let tabindex=10;
   restaurants.forEach(restaurant => {
-    UL.append(createRestaurantHTML(restaurant,tabindex));
-    tabindex+=2;
+    UL.append(createRestaurantHTML(restaurant));
+    //  UL.append(createRestaurantHTML(restaurant,tabindex));
+    //  tabindex+=2;
   });
   addMarkersToMap();
 }
@@ -147,11 +148,12 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 /**
  * Create restaurant HTML.
  */
-createRestaurantHTML = (restaurant,tabindex) => {
-  const tagLI = document.createElement('li');
+createRestaurantHTML = (restaurant) => {
+//  createRestaurantHTML = (restaurant, tabindex) => {
+    const tagLI = document.createElement('li');
 
   const tagDIV = document.createElement('div');
-  tagDIV.setAttribute('tabindex', tabindex.toString());
+  //tagDIV.setAttribute('tabindex', tabindex.toString());
   tagDIV.setAttribute('aria-label', `${restaurant.name}`);
   tagDIV.className = 'restaurantBox';
   tagLI.append(tagDIV);
@@ -178,8 +180,8 @@ createRestaurantHTML = (restaurant,tabindex) => {
   tagDIV.append(address);
 
   const more = document.createElement('a');
-  more.innerHTML = 'View Details';  
-  more.setAttribute('tabindex', (tabindex+1).toString());
+  more.innerHTML = 'View Details';
+  // more.setAttribute('tabindex', (tabindex+1).toString());
   more.href = DBHelper.urlForRestaurant(restaurant);
   more.setAttribute('aria-label', `More details on ${restaurant.name}`);
   more.className = 'restaurantDetalii';
