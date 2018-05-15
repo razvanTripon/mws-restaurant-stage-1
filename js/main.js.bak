@@ -1,12 +1,8 @@
 let restaurants, neighborhoods, cuisines;
 var markers = [];
 var map;
-window.onload = function () {
-  setInterval(() => {
-    document.querySelectorAll('#map *').forEach((el) => {
-      el.setAttribute('tabindex', '-1');
-    });
-  }, 100);
+window.onload = function(){
+  initMap();
 }
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
@@ -61,13 +57,23 @@ window.initMap = () => {
     center: loc,
     scrollwheel: false
   });
-  editMap = () => {
+
+//  google.maps.event.addDomListener(window, 'resize', function () {
+//    console.log("fired resize event")
+//    map.setCenter(loc);
+//  });
+  updateRestaurants();
+  self.map.addListener('tilesloaded', () => {
+    setInterval(() => {
+      document.querySelectorAll('#map *').forEach((el) => {
+        el.setAttribute('tabindex', '-1');
+      });
+    }, 100);
     const mapElement = document.getElementById('map');
     const frame = mapElement.getElementsByTagName('iframe')[0];
     frame.setAttribute('title', 'Map of Restaurants');
-  };
-  this.map.addListener('tilesloaded', editMap);
-  updateRestaurants();
+  }
+  );
 }
 updateRestaurants = () => {
   const cSelect = document.getElementById('cuisines-select');
@@ -102,8 +108,8 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     UL.append(createRestaurantHTML(restaurant));
   });
-  lazyLoad();
-  addMarkersToMap();
+ lazyLoad();
+ addMarkersToMap();
 
 }
 createRestaurantHTML = (restaurant) => {
@@ -115,11 +121,16 @@ createRestaurantHTML = (restaurant) => {
   const tagPICTURE = document.createElement('picture');
   const urlAdress = DBHelper.imageUrlForRestaurant(restaurant);
   if (urlAdress) {
+    // tagPICTURE.innerHTML = `<img class="restaurantImg lazy"  alt="${restaurant.alt}"  srcset="${urlAdress}_small@1x.jpg 1x,  ${urlAdress}_small@2x.jpg 2x" src="${urlAdress}_small@1x.jpg">`;
+    // tagPICTURE.className = 'restaurantPict';
+    // tagDIV.append(tagPICTURE);
     const image = document.createElement('img');
     image.className = 'restaurantImg restaurantPict lazy';
-    image.dataset.src = urlAdress + "_small@1x.jpg";
-    image.dataset.srcset = urlAdress + "_small@2x.jpg 2x";
-    image.alt = "Image of " + restaurant.name;
+    const imageName = DBHelper.imageUrlForRestaurant(restaurant);
+    console.log(imageName)
+    image.dataset.src = imageName + "_small@1x.jpg";
+    image.dataset.srcset = imageName + "_small@2x.jpg 2x";  
+    image.alt= "Image of " + restaurant.name;
     tagDIV.append(image);
   }
   const tagH3 = document.createElement('h3');
@@ -176,5 +187,5 @@ lazyLoad = () => {
     lazyImages.forEach(function (lazyImage) {
       lazyImageObserver.observe(lazyImage);
     });
-  }
+  } 
 }

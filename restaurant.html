@@ -1,27 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <link defer="defer" rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css">
+  <link rel="stylesheet" href="css/resp.css" media="(min-width: 860px)">
+  <link rel="preload" as="style" href="css/styles.css" onload="this.rel='stylesheet'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Main CSS file -->
-  <link rel="stylesheet" href="css/styles.css">
   <title>Restaurant Info</title>
 </head>
-
 <body class="restaurant inside">
-  <!-- Beginning header -->
   <header class="header">
-    <!-- Beginning nav -->
     <nav class="navHeader">
       <h1>
         <a href="/">Restaurant Reviews</a>
       </h1>
     </nav>
-
-    <!-- Beginning breadcrumb -->
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <ol class="breadcrumbList" id="breadcrumb">
         <li class="breadcrumbIte">
@@ -29,14 +25,8 @@
         </li>
       </ol>
     </nav>
-    <!-- End breadcrumb -->
-    <!-- End nav -->
   </header>
-  <!-- End header -->
-
-  <!-- Beginning main -->
   <main class="restaurantMain">
-    <!-- Beginning restaurant -->
     <section class="restaurant-details">
       <h2 class="restaurant-detailsName" id="restaurant-detailsName"></h2>
       <picture class="restaurant-img" id="restaurant-img"></picture>
@@ -47,36 +37,19 @@
         <table class="restaurant-hours" id="restaurant-hours" aria-labelledby="openHours"></table>
       </div>
     </section>
-    <!-- end restaurant -->
-
-    <!-- Beginning map -->
     <div tabindex="-1">
       <div class="locatie-harta" id="map" role="application"></div>
     </div>
-    <!-- End map -->
-
-    <!-- Beginning reviews -->
     <section class="reviews" id="reviews">
       <ul class="reviewsList" id="reviewsList"></ul>
     </section>
-    <!-- End reviews -->
   </main>
-  <!-- End main -->
-
-  <!-- Beginning footer -->
   <footer class="footer">
     Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
   </footer>
-  <!-- End footer -->
-
-  <!-- Beginning scripts -->
-  <!-- Database helpers -->
   <script src="js/dbhelper.js"></script>
-  <!-- Main javascript file -->
   <script src="js/restaurant_info.js"></script>
-  <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1xLbOrua94xzKEbuUydx9THJMhqyZTCY&libraries=places&callback=initMap"></script>
-  <!-- End scripts -->
 </body>
 
 </html>

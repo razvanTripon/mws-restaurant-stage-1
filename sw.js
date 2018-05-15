@@ -1,49 +1,56 @@
-var curentCacheName = 'restCache';
-var versionCacheName = curentCacheName + '-v1';
-var myArr = [
-  '/',
-  '/css/styles.css',
-  '/data/restaurants.json',
-  '/js/main.js',
-  '/js/restaurant_info.js',
-  '/js/dbhelper.js',
-   '/img/'
-];
-/* install service worker */
-self.addEventListener('install', (event) => {
+const cacheName = 'reviews-v2';
+// Cache files.
+self.addEventListener('install', event => {
+  console.log('Service worker installing');
   event.waitUntil(
-    caches.open(versionCacheName).then((cache) => {
-      return cache.addAll(myArr).then(() => self.skipWaiting());
-    })
-  );
+    caches.open(cacheName)
+    .then(cache => {
+			return cache.addAll([
+				'/',
+				'/restaurant.html',
+				'/css/styles.css',
+				'/js/main.js',
+				'/js/restaurant_info.js',
+				'/js/dbhelper.js',
+				'/manifest.json',
+				'/img/'
+			]);
+		}).then( () => {
+			console.log('Service worker installed');
+		}));
 });
-
-/* fetch resource */
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {  
+  if (event.request.method !== 'GET'){
+    return;
+  }
+  // Respond from cache and check for a fresh response.
   event.respondWith(
-    caches.match(event.request).then((respSrv) => {
-      return respSrv || fetch(event.request).then((response) => {
-        return caches.open(versionCacheName).then((cache) => {
-          cache.put(event.request, response.clone());
-          return response;
-        })
-      });
-    }).catch(() => {
-      console.log('Failure fetching. Sorry.......');
-    })
-  );
-});
+    caches.match(event.request)
+    .then(cached => {
+      const networked = fetch(event.request)
+      .then(fetchedFromNetwork, unableToResolve)
+      .catch(unableToResolve);
+      return cached || networked;
 
-/* remove old cache */
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNume) => {
-      return Promise.all(cacheNume.filter((cacheName) => {
-        return cacheName.startsWith(curentCacheName) && cacheName != versionCacheName;
-      }).map((cacheName) => {
-        return caches.delete(cacheName);
-      })
-      );
+      function fetchedFromNetwork(response){
+        const cacheCopy = response.clone();
+        // Cache new response.
+        caches.open(cacheName + 'pages')
+        .then(function add(cache){
+          cache.put(event.request, cacheCopy);
+        });
+        return response;
+      }
+      // Handle failure on both requests.
+      function unableToResolve(){
+        return new Response('<h1>Service Unavailable</h1>', {
+          status: 503,
+          statusText: 'Service Unavailable',
+          headers: new Headers({
+            'Content-Type': 'text/html'
+          })
+        });
+      }
     })
   );
 });

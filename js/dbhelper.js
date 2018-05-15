@@ -1,41 +1,86 @@
-/**
- * Common database helper functions.
- */
+
 class DBHelper {
-
-  /**
-   * Database URL.
-   * Change this to restaurants.json file location on your server.
-   */
   static get DATABASE_URL() {
-    const PORT = 8000; // Change this to your server port
-    return `http://localhost:${PORT}/data/restaurants.json`;
+    const port = 1337;
+    return  `http://localhost:${port}/restaurants`;
+    
   }
+  static get db_name() { return "restaurant_reviews"; }
+  static get object_store() { return "restaurants"; }
+  static get version() { return 2; }
 
-  /**
-   * Fetch all restaurants.
-   */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const RESTAURANTS = json.restaurants;
-        callback(null, RESTAURANTS);
-      } else { // Oops!. Got an error from server.
-        const ERROR = (`Request failed. Returned status of ${xhr.status}`);
-        callback(ERROR, null);
+    fetch(DBHelper.DATABASE_URL)
+      .then(response => response.json()).then(
+        json => {
+          const restaurants = json;
+          DBHelper.saveRestaurantsToDB(restaurants);
+          return callback(null, restaurants);
+        }
+      ).catch(e => {
+        let cachedRestaurantsData = DBHelper.fetchRestaurantsFromIndexedDB().then((data) => {
+          return callback(null, data);
+        }).catch((e) => {
+          console.error(e);
+          const error = (`Err. Returned status of ${e}`);
+          return callback(error, null);
+        });
+      });
+  }
+  static saveRestaurantsToDB(restaurants) {
+    if (!('indexedDB' in window)) {
+      console.log('This browser doesn\'t support IndexedDB');
+      return false;
+    }
+    const DBOpenRequest = window.indexedDB.open(DBHelper.db_name, DBHelper.version);
+    let db;
+    DBOpenRequest.onsuccess = (event) => {
+      db = DBOpenRequest.result;
+      const tx = db.transaction([DBHelper.object_store], 'readwrite');
+      const store = tx.objectStore(DBHelper.object_store);
+      for (let i = 0; i < restaurants.length; i++) {
+        store.add(restaurants[i]);
       }
     };
-    xhr.send();
+    DBOpenRequest.onerror = (e) => {
+      console.error("Error opening local database", e);
+    }
+    DBOpenRequest.onupgradeneeded = function (event) {
+      const db = event.target.result;
+      const objectStore = db.createObjectStore(DBHelper.object_store, {
+        keyPath: "id"
+      });
+    };
   }
-
-  /**
-   * Fetch a restaurant by its ID.
-   */
+  static fetchRestaurantsFromIndexedDB() {
+    if (!('indexedDB' in window)) {
+      console.log('This browser doesn\'t support IndexedDB');
+      return false;
+    }
+    const DBOpenRequest = window.indexedDB.open(DBHelper.db_name, DBHelper.version);
+    let db;
+    let restaurants = [];
+    return new Promise((resolve, reject) => {
+      DBOpenRequest.onsuccess = (event) => {
+        db = DBOpenRequest.result;
+        const tx = db.transaction([DBHelper.object_store]);
+        const store = tx.objectStore(DBHelper.object_store);
+        return store.openCursor().onsuccess = function (event) {
+          var cursor = event.target.result;
+          if (cursor) {
+            restaurants.push(cursor.value);
+            cursor.continue();
+          } else {
+            resolve(restaurants);
+          }
+        };
+      };
+      DBOpenRequest.onerror = (e) => {
+        reject("Error opening database");
+      }
+    })
+  }
   static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
@@ -49,44 +94,27 @@ class DBHelper {
       }
     });
   }
-
-  /**
-   * Fetch restaurants by a cuisine type with proper error handling.
-   */
   static fetchRestaurantByCuisine(cuisine, callback) {
-    // Fetch all restaurants with proper error handling
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
-        // Filter restaurants to have only given cuisine type
         const RESULTS = restaurants.filter(r => r.cuisine_type == cuisine);
         callback(null, RESULTS);
       }
     });
   }
-
-  /**
-   * Fetch restaurants by a neighborhood with proper error handling.
-   */
   static fetchRestaurantByNeighborhood(neighborhood, callback) {
-    // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
-        // Filter restaurants to have only given neighborhood
         const RESULTS = restaurants.filter(r => r.neighborhood == neighborhood);
         callback(null, RESULTS);
       }
     });
   }
-
-  /**
-   * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
-   */
   static fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, callback) {
-    // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
@@ -102,69 +130,42 @@ class DBHelper {
       }
     });
   }
-
-  /**
-   * Fetch all neighborhoods with proper error handling.
-   */
   static fetchNeighborhoods(callback) {
-    // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
-        // Get all neighborhoods from all restaurants
         const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood);
-        // Remove duplicates from neighborhoods
         const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i);
         callback(null, uniqueNeighborhoods);
       }
     });
   }
-
-  /**
-   * Fetch all cuisines with proper error handling.
-   */
   static fetchCuisines(callback) {
-    // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
-        // Get all cuisines from all restaurants
         const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type);
-        // Remove duplicates from cuisines
         const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i);
         callback(null, uniqueCuisines);
       }
     });
   }
-
-  /**
-   * Restaurant page URL.
-   */
   static urlForRestaurant(restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
   }
-
-  /**
-   * Restaurant image URL.
-   */
   static imageUrlForRestaurant(restaurant) {
-    let imgName=restaurant.photograph.slice(0, -4);
-    //console.log(imgName);
-    return (`/img/${imgName}`);
+    return restaurant.id ? (`/img/${restaurant.id}`) : false;
   }
-
-  /**
-   * Map marker for a restaurant.
-   */
   static mapMarkerForRestaurant(restaurant, map) {
     const MARKER = new google.maps.Marker({
       position: restaurant.latlng,
       title: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant),
       map: map,
-      animation: google.maps.Animation.DROP}
+      animation: google.maps.Animation.DROP
+    }
     );
     return MARKER;
   }
