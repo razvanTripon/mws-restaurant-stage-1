@@ -1,56 +1,144 @@
-const cacheName = 'reviews-v2';
-// Cache files.
-self.addEventListener('install', event => {
-  console.log('Service worker installing');
-  event.waitUntil(
-    caches.open(cacheName)
-    .then(cache => {
-			return cache.addAll([
-				'/',
-				'/restaurant.html',
-				'/css/styles.css',
-				'/js/main.js',
-				'/js/restaurant_info.js',
-				'/js/dbhelper.js',
-				'/manifest.json',
-				'/img/'
-			]);
-		}).then( () => {
-			console.log('Service worker installed');
-		}));
-});
-self.addEventListener('fetch', event => {  
-  if (event.request.method !== 'GET'){
-    return;
-  }
-  // Respond from cache and check for a fresh response.
-  event.respondWith(
-    caches.match(event.request)
-    .then(cached => {
-      const networked = fetch(event.request)
-      .then(fetchedFromNetwork, unableToResolve)
-      .catch(unableToResolve);
-      return cached || networked;
+importScripts("js/idb.js");
+importScripts("js/utility.js");
 
-      function fetchedFromNetwork(response){
-        const cacheCopy = response.clone();
-        // Cache new response.
-        caches.open(cacheName + 'pages')
-        .then(function add(cache){
-          cache.put(event.request, cacheCopy);
-        });
-        return response;
-      }
-      // Handle failure on both requests.
-      function unableToResolve(){
-        return new Response('<h1>Service Unavailable</h1>', {
-          status: 503,
-          statusText: 'Service Unavailable',
-          headers: new Headers({
-            'Content-Type': 'text/html'
-          })
-        });
-      }
-    })
-  );
-});
+(function() {
+  "use strict";
+  var filesToCache = [
+    ".",
+    "index.html",
+    "404.html",
+    "restaurant.html",
+    "offline.html",
+    "js/idb.js",
+    'css/styleMain.css',
+    'css/styleRest.css',
+    "img/1-2x.jpg",
+    "img/1-1x.jpg",
+    "img/1-2x.webp",
+    "img/1-1x.webp",
+    "img/2-2x.jpg",
+    "img/2-1x.jpg",
+    "img/2-2x.webp",
+    "img/2-1x.webp",
+    "img/3-2x.jpg",
+    "img/3-1x.jpg",
+    "img/3-2x.webp",
+    "img/3-1x.webp",
+    "img/4-2x.jpg",
+    "img/4-1x.jpg",
+    "img/4-2x.webp",
+    "img/4-1x.webp",
+    "img/5-2x.jpg",
+    "img/5-1x.jpg",
+    "img/5-2x.webp",
+    "img/5-1x.webp",
+    "img/6-2x.jpg",
+    "img/6-1x.jpg",
+    "img/6-2x.webp",
+    "img/6-1x.webp",
+    "img/7-2x.jpg",
+    "img/7-1x.jpg",
+    "img/7-2x.webp",
+    "img/7-1x.webp",
+    "img/8-2x.jpg",
+    "img/8-1x.jpg",
+    "img/8-2x.webp",
+    "img/8-1x.webp",
+    "img/9-2x.jpg",
+    "img/9-1x.jpg",
+    "img/9-2x.webp",
+    "img/9-1x.webp",
+    "img/10-2x.jpg",
+    "img/10-1x.jpg",
+    "img/10-2x.webp",
+    "img/10-1x.webp",
+    "img/mancare.webp",
+    "js/main.js",
+    "js/restaurant_info.js",
+    "js/dbhelper.js",
+    "js/lazysizes.min.js",
+    "js/utility.js"
+  ];
+
+  let staticCacheName = "pages-cache-v1";
+
+  self.addEventListener("install", function(event) {
+    console.log("Attempting to install service worker and cache static assets");
+    event.waitUntil(
+      caches.open(staticCacheName).then(function(cache) {
+        return cache.addAll(filesToCache);
+      })
+    );
+  });
+
+  self.addEventListener("fetch", function(event) {
+    if (event.request.url.indexOf("maps.google") !== -1) {
+      return false;
+    }
+    if (
+      event.request.cache === "only-if-cached" &&
+      event.request.mode !== "same-origin"
+    )
+      return;
+    event.respondWith(
+      caches
+        .match(event.request)
+        .then(function(response) {
+          if (response) {
+            return response;
+          }
+          return (
+            fetch(event.request)
+              .then(function(response) {
+                if (response.status === 404) {
+                  return caches.match("404.html");
+                }
+                return caches.open(staticCacheName).then(function(cache) {
+                  if (
+                    event.request.url.indexOf("maps.google") !== -1 &&
+                    event.request.url !== url1
+                  ) {
+                    cache.put(event.request.url, response.clone());
+                  }
+                  return response;
+                });
+              })
+          );
+        })
+        .catch(function(error) {
+          console.log("Error, ", error);
+          return caches.match("offline.html");
+        })
+    );
+  });
+  self.addEventListener("sync", function(event) {
+    if (event.tag === "sync-new-posts") {
+      event.waitUntil(
+        readAllData("sync-posts").then(function(data) {
+          for (var dt of data) {
+            fetch("http://localhost:1337/reviews/", {
+              method: "POST",
+              body: JSON.stringify({
+                restaurant_id: dt.restaurant_id,
+                name: dt.name,
+                rating: dt.rating,
+                comments: dt.comments,
+                date: dt.date
+              })
+            })
+              .then(function(res) {
+                if (res.ok) {
+                  res.json().then(function(resData) {
+                    deleteItemFromData("sync-posts", resData.date);
+                  });
+                }
+              })
+              .catch(function(err) {
+                console.log("Error while sending data", err);
+              });
+          }
+        })
+      );
+    }
+  });
+})();

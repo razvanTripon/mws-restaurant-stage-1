@@ -1,0 +1,699 @@
+html {
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+  }
+  h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+  }
+
+  hr {
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+    overflow: visible;
+  }
+  pre {
+    font-family: monospace, monospace;
+    font-size: 1em;
+  }
+  a {
+    background-color: transparent;
+  }
+
+  abbr[title] {
+    border-bottom: none;
+    text-decoration: underline;
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+  }
+  b,
+  strong {
+    font-weight: bolder;
+  }
+  code,
+  kbd,
+  samp {
+    font-family: monospace, monospace;
+    font-size: 1em;
+  }
+  small {
+    font-size: 80%;
+  }
+  sub,
+  sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  sub {
+    bottom: -0.25em;
+  }
+  sup {
+    top: -0.5em;
+  }
+  img {
+    border-style: none;
+  }
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 2;
+    margin: 0;
+  }
+  button,
+  input {
+    overflow: visible;
+  }
+  button,
+  select {
+    text-transform: none;
+  }
+  button,
+  [type="button"],
+  [type="reset"],
+  [type="submit"] {
+    -webkit-appearance: button;
+  }
+  button::-moz-focus-inner,
+  [type="button"]::-moz-focus-inner,
+  [type="reset"]::-moz-focus-inner,
+  [type="submit"]::-moz-focus-inner {
+    border-style: none;
+    padding: 0;
+  }
+  button:-moz-focusring,
+  [type="button"]:-moz-focusring,
+  [type="reset"]:-moz-focusring,
+  [type="submit"]:-moz-focusring {
+    outline: 1px dotted ButtonText;
+  }
+  fieldset {
+    padding: 0.35em 0.75em 0.625em;
+  }
+  legend {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: inherit;
+    display: table;
+    max-width: 100%;
+    padding: 0;
+    white-space: normal;
+  }
+  progress {
+    vertical-align: baseline;
+  }
+  textarea {
+    overflow: auto;
+  }
+  [type="checkbox"],
+  [type="radio"] {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0;
+  }
+  [type="number"]::-webkit-inner-spin-button,
+  [type="number"]::-webkit-outer-spin-button {
+    height: auto;
+  }
+  [type="search"] {
+    -webkit-appearance: textfield;
+    outline-offset: -2px;
+  }
+  [type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+
+  ::-webkit-file-upload-button {
+    -webkit-appearance: button;
+    font: inherit;
+  }
+  details {
+    display: block;
+  }
+  summary {
+    display: list-item;
+  }
+
+  template {
+    display: none;
+  }
+
+  [hidden] {
+    display: none;
+  }
+
+  /* CSS Document */
+
+  body,
+  html,
+  nav {
+    height: 100%;
+  }
+
+  body,
+  td,
+  th,
+  p {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.8em;
+    line-height: 1.5;
+  }
+
+  body,
+  .inside {
+    background-color: #fff;
+    width: 100%;
+    margin: auto;
+    position: relative;
+  }
+
+  * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  ul,
+  li {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    color: #333;
+  }
+
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  a:hover,
+  a:focus {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  a img {
+    border: none 0px #fff;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  article,
+  aside,
+  canvas,
+  details,
+  figcaption,
+  figure,
+  footer,
+  header,
+  hgroup,
+  menu,
+  nav,
+  section {
+    display: block;
+  }
+
+  #maincontent,
+  .inside #maincontent,
+    {
+    background-color: #fff;
+    min-height: 100%;
+  }
+
+  footer {
+    background-color: #252832;
+    color: #fff;
+    font-size: 1.3em;
+    letter-spacing: 1px;
+    padding: 25px;
+    text-align: center;
+    text-transform: uppercase;
+    max-width: 100%;
+  }
+
+  /* ====================== Navigation ====================== */
+
+  .main-title {
+    width: 100%;
+    min-width: 2em;
+    background-color: #252832;
+    color: #fff;
+    text-align: center;
+    z-index: 1;
+    text-align: center;
+    margin: 0 auto;
+    padding: 10px;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: 200;
+    letter-spacing: 10px;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .main-title a:hover,
+  .main-title a:focus {
+    color: #3397DB;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+  #breadcrumb,
+  .map-button {
+    padding: 10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    list-style: none;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    background-color: #fff;
+    font-size: 20px;
+    margin: 0;
+  }
+  #breadcrumb li {
+    padding: 10px;
+  }
+
+  #breadcrumb li+li:before {
+    padding: 8px;
+    color: #252832;
+    content: "/\00a0";
+  }
+  #breadcrumb li a,
+  #showGoogleMap,
+  .favorite_btn,
+  #post-submit {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    background-color: #252832;
+    border-radius: 5px;
+    border: none;
+  }
+  #breadcrumb li a:hover,
+  #breadcrumb li a:focus,
+  #showGoogleMap:hover,
+  #showGoogleMap:focus,
+  .favorite_btn:focus,
+  .favorite_btn:hover {
+    color:#3397DB;
+    }
+
+
+  #map,
+  .inside #map {
+    height: 400px;
+    max-width: 100%;
+    background-color: #ccc;
+    /* border-top: 8px solid #252832; */
+  }
+
+  #restaurants-list .restaurant-img {
+    border-radius: 5px;
+  }
+
+  #restaurant-name {
+    color: #252832;
+    font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
+    font-size: 1em;
+    font-weight: 200;
+    letter-spacing: 0;
+    line-height: 1.2;
+    margin: 10px;
+    text-transform: uppercase;
+  }
+
+  #restaurant-address {
+    margin-left: 10px;
+    color: #000;
+    font-size: 1.3em;
+  }
+
+  #reviews-container h2 {
+    padding: 5px;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+
+  #restaurant-img {
+    display: block;
+
+  }
+
+  #restaurant-address {
+    font-size: 1.2em;
+    margin: 10px 0px;
+  }
+
+  #restaurant-cuisine {
+    background-color: #252832;
+    color: white;
+    font-size: 1.2em;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 8px;
+  }
+
+  #restaurant-hours {
+    padding: 3px;
+    line-height: 1.4em;
+    background-color: #F3F3F2;
+    min-height: 100%;
+  }
+
+  #restaurant-hours tr:nth-child(odd) {
+    background-color: #fff;
+  }
+
+  #restaurant-container,
+  #reviews-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    font-size: 1.5em;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: column wrap;
+    flex-flow: column wrap;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+  }
+
+  #reviews-container {
+    background-color:#F3F3F2;
+  }
+
+  #restaurant-col_address {
+    background-color: #fff;
+    text-align: center;
+    padding: 20px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: column wrap;
+    flex-flow: column wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+
+  #reviews-list {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: column nowrap;
+    flex-flow: column nowrap;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    padding: 10px;
+  }
+
+  #reviews-list li {
+    background-color: #fff;
+    border-radius: 5px;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    list-style-type: none;
+    margin: 10px;
+    padding: 20px;
+    max-width: 100%;
+    min-width: 300px;
+  }
+
+  .review-list_title {
+    letter-spacing: 0.8em;
+  }
+
+  .reviewer {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .ratings {
+    background-color: #252832;
+    color: white;
+    padding: 3px;
+    display: inline-block;
+    font-weight: bold;
+    border-radius: 5px;
+  }
+
+  .comments-fieldset {
+    margin: 10px;
+    border-radius: 5px;
+    border: 3px solid #252832;
+
+  }
+
+  .title-post {
+    font-size: 1.8em;
+    color: #252832;
+  }
+
+  label {
+    color: white;
+    font-size: 1.6em;
+  }
+
+  #post-message {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: column wrap;
+    flex-flow: column wrap;
+
+    padding: 15px;
+  }
+
+  #post-message *:not(label) {
+    margin-bottom: 20px;
+  }
+
+  #post-message label {
+    color: black;
+  }
+
+  #post-submit {
+    max-width: 50%;
+    font-size: 1.4em;
+    margin-right: auto;
+  }
+
+  #comments-form {
+    padding-bottom: 30px;
+  }
+
+  .gm-err-message {
+    color: black;
+  }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  .add-to-favorite {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: column;
+    flex-flow: column;
+
+    -ms-flex-line-pack: center;
+
+    align-content: center;
+
+    padding: 20px;
+    text-align: center;
+  }
+
+
+  #post-submit {
+    background-color: #252832;
+    color: white;
+  }
+
+  #post-submit:focus,
+  #post-submit:hover {
+
+    background-color: #bad2ea;
+
+  }
+
+
+  .star {
+    font-size: 10em;
+    background: none;
+    border: none;
+
+    color: #464444c7;
+  }
+
+  #map-container {
+    display: none;
+    -webkit-transition: display 2s;
+    transition: display 2s;
+  }
+
+  .lazyloaded {
+    display: block;
+
+  }
+
+  @media (min-width: 300px) {
+
+    #restaurant-name {
+      font-size: 1em;
+    }
+    .main-title a {
+      font-size: 1.6em;
+    }
+  }
+
+  @media (min-width: 500px) {
+    #restaurant-container {
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+      -ms-flex-pack: distribute;
+      justify-content: space-around;
+      -ms-flex-line-pack: stretch;
+      align-content: stretch;
+      border: 10px 0px solid #fff;
+    }
+
+    #restaurant-hours {
+      min-width: 30%;
+    }
+    #restaurant-col_address img {
+      display: inline-block;
+      margin: auto;
+    }
+    .main-title a {
+      font-size: 1.7em;
+    }
+  }
+
+  @media (min-width: 830px) {
+    .main-title a {
+      font-size: 1.8em;
+    }
+    header {
+      background-image: url("../img/mancare.webp");
+      background-color: #bad2ea;
+      min-height: 50%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: relative;
+    }
+
+    #restaurant-name {
+      font-size: 1.3em;
+    }
+
+    #reviews-list {
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+    }
+    #comments-form {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+      flex-flow: column;
+      margin: auto;
+      max-width: 75%;
+    }
+
+  }
+  @media (min-width: 1260px) {
+    #reviews-list {
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+      -ms-flex-pack: distribute;
+      justify-content: space-around;
+    }
+
+
+
+    header {
+      background-image: url("../img/mancare.webp");
+    }
+
+
+  }
+
+  @media (min-width: 1326px) {
+    #goto-map {
+      display: block;
+    }
+  }
+
+  @media (min-width: 2000px) {
+    body {
+      max-width: 2000px;
+      margin: auto;
+    }
+    #maincontent {
+      min-height: auto;
+    }
+  }

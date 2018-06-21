@@ -1,45 +1,49 @@
-let restaurant;
-var map;
-window.initMap = () => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
- //     fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-      //set tabindex to -1 for all map elements  
-      self.map.addListener('tilesloaded', () => {
-        const mapElement = document.getElementById('map');
-        const frame = mapElement.getElementsByTagName('iframe')[0];
-        frame.setAttribute('title', 'Restaurant Map');
-        
-        setInterval(() => {
-          document.querySelectorAll('#map *').forEach((el) => {
-            el.setAttribute('tabindex', '-1');
-          });
-        }, 1000);
-      }
-      );
-    }
+let restaurant, map;
+window.initMap = (restaurant = self.restaurant) => {
+  self.map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 16,
+    center: restaurant.latlng,
+    scrollwheel: false
   });
 
-}
-fetchRestaurantFromURL = (callback) => {
-  if (self.restaurant) { // restaurant already fetched!
+  self.map.addListener("tilesloaded", setMapTitle);
+  DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+};
+
+document.addEventListener("DOMContentLoaded", event => {
+  fetchRestaurantFromURL((error, restaurant) => {
+    if (error) {
+      // Got an error!
+      console.error(error);
+    } else {
+      fillBreadcrumb();
+    }
+  });
+});
+
+setMapTitle = () => {
+  const mapFrame = document.getElementById("map").querySelector("iframe");
+  mapFrame.setAttribute("title", "Google maps with restaurant location");
+  const htmlFrame1 = document
+    .getElementById("map")
+    .querySelector("iframe")
+    .contentWindow.document.querySelector("html");
+
+  console.log(htmlFrame1);
+  htmlFrame1.setAttribute("lang", "en");
+};
+fetchRestaurantFromURL = callback => {
+  if (self.restaurant) {
+    // restaurant already fetched!
     callback(null, self.restaurant);
     return;
   }
-  const ID = getParameterByName('id');
-  if (!ID) { // no id found in URL
-    error = 'No restaurant id in URL';
+  const id = getParameterByName("id");
+  if (!id) {
+    error = "No restaurant id in URL";
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(ID, (error, restaurant) => {
+    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
         console.error(error);
@@ -49,111 +53,250 @@ fetchRestaurantFromURL = (callback) => {
       callback(null, restaurant);
     });
   }
-}
+};
+
+var getReviewsURL = function() {
+  const port = 1337; // Change this to your server port
+  const index = window.location.href.indexOf("=");
+  const id = window.location.href.slice(index + 1);
+
+  return `http://localhost:${port}/reviews/?restaurant_id=${id}`;
+};
 fillRestaurantHTML = (restaurant = self.restaurant) => {
-  const name = document.getElementById('restaurant-detailsName');
+  const name = document.getElementById("restaurant-name");
   name.innerHTML = restaurant.name;
-  const address = document.getElementById('restaurant-address');
-  const addressAfis = restaurant.address.replace(',', '<br>');
-  address.innerHTML = addressAfis;
-  const imagine = document.getElementById('restaurant-img');
-  const url_imagine = DBHelper.imageUrlForRestaurant(restaurant);
-  imagine.innerHTML = `<source media="(min-width: 1280px)"  srcset="${url_imagine}_large.jpg"  sizes="45vw">` +
-    `<source media="(min-width: 440px)"   srcset="${url_imagine}_medium.jpg" sizes="(min-width: 650px) 50vw, 85vw">` +
-    `<img
-     class="restaurant-detailsImagine" 
-     id="restaurant-detailsImagine" 
-     alt="${restaurant.alt}"
-     srcset="${url_imagine}_small@1x.jpg 1x,
-            ${url_imagine}_small@2x.jpg 2x" 
-     src="${url_imagine}_small@1x.jpg">`;
-  const cuisine = document.getElementById('restaurant-cuisine');
+  const address = document.getElementById("restaurant-address");
+  address.innerHTML = restaurant.address;
+  const image = document.getElementById("restaurant-img");
+  image.className = "restaurant-img";
+  image.alt = `${restaurant.name} restaurant`;
+  const imageDest = DBHelper.imageUrlForRestaurant(restaurant);
+  const imageNumber = imageDest;
+  const setSourcet = `img/${imageNumber}-1x.jpg 1x, img/${imageNumber}-1x.webp 1x , img/${imageNumber}-2x.jpg 2x, img/${imageNumber}-2x.webp 2x`;
+  image.setAttribute("srcset", setSourcet);
+  image.setAttribute("sizes", "(min-width: 416px) 320px");
+  image.src = `img/${imageNumber}-2x.jpg`;
+  const cuisine = document.getElementById("restaurant-cuisine");
   cuisine.innerHTML = restaurant.cuisine_type;
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  fillReviewsHTML();
-}
-fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
-  const hours = document.getElementById('restaurant-hours');
+  getReviewsURL();
+};
+fillRestaurantHoursHTML = (
+  operatingHours = self.restaurant.operating_hours
+) => {
+  const hours = document.getElementById("restaurant-hours");
   for (let key in operatingHours) {
-    const row = document.createElement('tr');
-    row.className = 'deschisRanduri';
-    const day = document.createElement('th');
-    day.className = 'deschisZile';
-    day.setAttribute('scope', 'row');
+    const row = document.createElement("tr");
+    const day = document.createElement("td");
     day.innerHTML = key;
     row.appendChild(day);
-    const time = document.createElement('td');
-    time.className = 'deschisOre';
-    const timeAfisat = operatingHours[key].replace(',', '<br>');
-    time.innerHTML = timeAfisat
+    const time = document.createElement("td");
+    time.innerHTML = operatingHours[key];
     row.appendChild(time);
     hours.appendChild(row);
   }
+};
+getRestaurantReviews = () => {
+  return fetch(getReviewsURL()).then(response => {
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    return response.json();
+  });
+};
+
+loadContentNetworkFirst();
+function loadContentNetworkFirst() {
+  getRestaurantReviews()
+    .then(dataFromNetwork => {
+      fillReviewsHTML(dataFromNetwork); 
+      saveReviewsDataLocally(dataFromNetwork);
+    })
+    .catch(err => {
+       console.log("Network requests have failed, this is expected if offline");
+      getReviewsData() 
+        .then(offlineData => {
+          if (!offlineData.length) {
+              console.log("no data");
+          } else {
+            fillReviewsHTML(offlineData);
+          }
+        });
+    });
 }
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-  const container = document.getElementById('reviews');
-  const title = document.createElement('h3');
-  title.className = 'reviewsHeader';
-  title.innerHTML = 'Reviews';
+
+getRestaurantReviews = () => {
+  return fetch(getReviewsURL()).then(response => {
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    return response.json();
+  });
+};
+
+function saveReviewsDataLocally(reviews) {
+  if (!("indexedDB" in window)) {
+    return null;
+  }
+  return dbPromise.then(db => {
+    const tx = db.transaction("reviews", "readwrite");
+    const store = tx.objectStore("reviews");
+    return Promise.all(reviews.map(review => store.put(review))).catch(() => {
+      tx.abort();
+      throw Error("Err");
+    });
+  });
+}
+
+function getReviewsData() {
+  if (!("indexedDB" in window)) {
+    return null;
+  }
+  return dbPromise.then(db => {
+    const tx = db.transaction("reviews", "readonly");
+    const store = tx.objectStore("reviews");
+    return store.getAll();
+  });
+}
+fillReviewsHTML = reviews => {
+  const container = document.getElementById("reviews-container");
+  const title = document.createElement("h3");
+  title.innerHTML = "REVIEWS";
+  title.classList = "review-list_title";
   container.appendChild(title);
   if (!reviews) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
+    const noReviews = document.createElement("p");
+    noReviews.innerHTML = "No reviews yet!";
     container.appendChild(noReviews);
     return;
   }
-  const ul = document.getElementById('reviewsList');
+  const ul = document.getElementById("reviews-list");
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
-}
-createReviewHTML = (review) => {
-  const tagLI = document.createElement('li');
-  tagLI.className = 'reviewsItem';
-  const tagArticle = document.createElement('article');
-  const tagNameP = document.createElement('p');
-  tagNameP.innerHTML = review.name;
-  tagNameP.setAttribute('aria-hidden', 'true');
-  tagNameP.className = 'autorul';
-  tagArticle.appendChild(tagNameP);
-  const tagRatingP = document.createElement('p');
-  tagRatingP.innerHTML = `Rating: ${review.rating}`;
-  tagRatingP.className = 'stele';
-  tagArticle.appendChild(tagRatingP);
-  tagArticle.setAttribute('role', 'article');
-  tagArticle.setAttribute('aria-label', `Evaluated by ${review.name} on ${review.date}`);
-  tagArticle.className = 'review';
-  tagLI.appendChild(tagArticle);
-  const tagDateP = document.createElement('p');
-  tagDateP.innerHTML = review.date;
-  tagDateP.setAttribute('aria-hidden', 'true');
-  tagDateP.className = 'data';
-  tagArticle.appendChild(tagDateP);
-  const tagCommP = document.createElement('p');
-  tagCommP.innerHTML = review.comments;
-  tagCommP.className = 'comentarii';
-  tagArticle.appendChild(tagCommP);
-  return tagLI;
-}
+};
+createReviewHTML = review => {
+  const li = document.createElement("li");
+  const name = document.createElement("p");
+  name.innerHTML = review.name;
+  name.classList = "reviewer";
+  li.appendChild(name);
+  const date = document.createElement("p");
+  let secDate = new Date(review.createdAt);
+  date.innerHTML = secDate.toLocaleDateString();
+  li.appendChild(date);
+  const rating = document.createElement("p");
+  rating.innerHTML = `Rating: ${review.rating}`;
+  rating.className = "ratings";
+  li.appendChild(rating);
+  const comments = document.createElement("p");
+  comments.innerHTML = review.comments;
+  li.appendChild(comments);
+  return li;
+};
 fillBreadcrumb = (restaurant = self.restaurant) => {
-  const breadcrumb = document.getElementById('breadcrumb');
-  const tagli = document.createElement('li');
-  tagli.innerHTML = restaurant.name;
-  tagli.setAttribute('aria-current', 'page');
-  breadcrumb.appendChild(tagli);
-}
+  const breadcrumb = document.getElementById("breadcrumb");
+  const li = document.createElement("li");
+  li.innerHTML = restaurant.name;
+  breadcrumb.appendChild(li);
+};
 getParameterByName = (name, url) => {
-  if (!url)
-    url = window.location.href;
-  name = name.replace(/[\[\]]/g, '\\$&');
-  const REGEX = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
-    results = REGEX.exec(url);
-  if (!results)
-    return null;
-  if (!results[2])
-    return '';
-  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
+    results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return "";
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+const restaurantId = window.location.href.slice(41);
+document.getElementById("restId").value = restaurantId;
+var buttonMap = document.getElementById("showGoogleMap");
+buttonMap.addEventListener("click", loadGoogleMap, false);
+document
+  .querySelector("#post-message")
+  .addEventListener("submit", function(event) {
+    event.preventDefault();
+    const reviewerRate = document.getElementById("rating");
+    const reviewerName = document.getElementById("reviewerName");
+    const reviewComment = document.getElementById("comment");
+    if ("serviceWorker" in navigator && "SyncManager" in window) {
+      navigator.serviceWorker.ready
+        .then(function(sw) {
+          var post = {
+            date: new Date().toISOString(),
+            restaurant_id: restaurantId,
+            name: reviewerName.value,
+            rating: reviewerRate.value,
+            comments: reviewComment.value
+          };
+          writeData("sync-posts", post)
+            .then(function() {
+              return sw.sync.register("sync-new-posts");
+            })
+            .then(function(res) {
+              if (navigator.onLine) {
+                window.location.reload();
+              } else {
+                document.getElementById("connectivity-message").style.display = "block";
+              }
+            })
+            .catch(function(err) {
+              console.log(err);
+            });
+        })
+        .catch(function() {
+          var comment = {
+            restaurant_id: restaurantId,
+            name: reviewerName.value,
+            rating: reviewerRate.value,
+            comments: reviewComment.value
+          };
+          fetch("http://localhost:1337/reviews/", {
+            method: "POST",
+            headers: new Headers({
+              "content-type": "application/json"
+            }),
+            body: JSON.stringify(comment)
+          }).then(function(res) {
+            if (res.ok) {
+              window.location.reload();
+            }
+          });
+        });
+    } else {
+      var comment = {
+        restaurant_id: restaurantId,
+        name: reviewerName.value,
+        rating: reviewerRate.value,
+        comments: reviewComment.value
+      };
+      return fetch("http://localhost:1337/reviews/", {
+        method: "POST",
+        headers: new Headers({
+          "content-type": "application/json"
+        }),
+        body: JSON.stringify(comment)
+      }).then(function(res) {
+        if (res.ok) {
+          window.location.reload();
+        }
+      });
+    }
+  });
+
+function loadGoogleMap() {
+  let restHeader=document.getElementById("restHeader");
+  restHeader.style.backgroundImage="none";
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src =
+    "https://maps.googleapis.com/maps/api/js?key=AIzaSyA4oH775xlta1OwyIGbVVPtDYMLIfXcBpY&libraries=places&callback=initMap";
+  document.getElementsByTagName("head")[0].appendChild(script);
+  document.getElementById("map-container").style.display = "block";
+  buttonMap.removeEventListener("click", loadGoogleMap, false);
+  return false;
 }

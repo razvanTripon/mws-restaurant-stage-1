@@ -3,45 +3,73 @@
 
 <head>
   <meta charset="utf-8">
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <link defer="defer" rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css">
-  <link rel="stylesheet" href="css/resp.css" media="(min-width: 860px)">
-  <link rel="stylesheet" href="css/styles.css">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#252832" />
+  <link rel="stylesheet" href="css/styleMain.css">
+
+  <style>
+ 
+  </style>
+  <link rel="manifest" href="manifest.json">
   <title>Restaurant Reviews</title>
 </head>
 
 <body>
-  <header class="header">
-    <nav class="navHeader">
-      <h1>
-        <a href="/">Restaurant Reviews</a>
-      </h1>
-    </nav>
-  </header>
-  <main class="maincontent">
-    <section class="location">
-      <div class="hart" id="map" role="application"></div>
+  <header id='mainHeader'>
+    <h1 class="main-title">
+      <a href="/">Restaurant Reviews</a>
+    </h1>
+    <section id="map-container">
+      <div id="map" role="application"></div>
     </section>
+  </header>
+  <main id="maincontent">
     <section>
-      <div class="filterOptions">
-        <h2>Filter&nbsp;Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Filter restaurants by neighborhood">
+
+      <div class="filter-options">
+        <button id="toTheMap" >Google Map</button>
+        <label for="neighborhoods-select">Choose Location:</label>
+        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
         </select>
-        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Filter restaurants by cuisine">
+
+        <label for="cuisines-select">Choose Couisine:</label>
+        <select id="cuisines-select" name="cuisines" onChange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
       </div>
-      <ul class="restaurants-list" id="restaurants-list"></ul>
+      <!-- <nav>
+          <ul id="navigation">
+            <li>
+                <button id="toTheMap">Google Map</button>
+             </li>
+          </ul>
+        </nav> -->
+      <ul id="restaurants-list"></ul>
     </section>
+
   </main>
-  <footer class="footer"> Copyright (c) 2017 <a href="/"> <strong>Restaurant Reviews</strong> </a> All Rights Reserved. </footer>
-  <script type="application/javascript" src="js/dbhelper.js"></script>
-  <script type="application/javascript" src="js/main.js"></script>
-  <script async defer="defer" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4oH775xlta1OwyIGbVVPtDYMLIfXcBpY&libraries=places&callback=initMap"></script>
+  <footer class="footer"> Copyright (c) 2017
+    <a href="/">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved. </footer>
+  <script src="js/idb.js" type="application/javascript" charset="utf-8"></script>
+  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(function (registration) {
+          console.log('Service Worker inregistrat: ');
+        })
+        .catch(function (err) {
+          console.log('Service Worker esuat: ', err);
+        });
+    }
+  </script>
+  <script src="js/lazysizes.min.js" async=""></script>
 </body>
 
 </html>
