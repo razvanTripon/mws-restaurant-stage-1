@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,8 +24,8 @@
       </ul>
     </nav>
     <section id="map-container">
-        <div id="map" role="application" aria-hidden="true" aria-describedby="map-help"></div>
-      </section>
+      <div id="map" role="application" aria-hidden="true" aria-describedby="map-help"></div>
+    </section>
   </header>
   <section class="map-button">
     <button id="showGoogleMap">Google Map</button>
@@ -38,7 +39,12 @@
         <p id="restaurant-cuisine"></p>
         <p id="restaurant-address"></p>
       </div>
+
       <table id="restaurant-hours" aria-labelledby="openHours"></table>
+      <div class="add-to-favorite">
+        <button class="star" aria-label="Fav Restaurant/Unfav Restaurant">★</button>
+                  <!-- <span class="star" id="star" aria-label="Fav Restaurant/Unfav Restaurant">★</span>      -->
+      </div>
     </section>
     <section id="reviews-container">
       <ul id="reviews-list"></ul>
@@ -47,6 +53,7 @@
       <fieldset class="comments-fieldset">
         <div class="title-post">Post a Comment</div>
         <form id="post-message">
+
           <label for="reviewerName">Your Name:</label>
           <input id="reviewerName" type="text" name="name" required aria-label="Review Author Name" placeholder="Your Name">
           <label for="rating">Your Rate:</label>
@@ -60,7 +67,10 @@
       </fieldset>
     </section>
   </main>
-  <footer class="footer"> Copyright (c) 2017 <a href="/"> <strong>Restaurant Reviews</strong> </a> All Rights Reserved. </footer>
+  <footer class="footer"> Copyright (c) 2017
+    <a href="/">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved. </footer>
   <script src="js/idb.js" type="application/javascript" charset="utf-8"></script>
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <script src="js/utility.js" type="application/javascript" charset="utf-8"></script>
@@ -77,4 +87,5 @@
     }
   </script>
 </body>
+
 </html>

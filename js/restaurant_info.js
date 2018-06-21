@@ -78,6 +78,24 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.src = `img/${imageNumber}-2x.jpg`;
   const cuisine = document.getElementById("restaurant-cuisine");
   cuisine.innerHTML = restaurant.cuisine_type;
+
+
+  if (restaurant.is_favorite === "true") {
+    // const favBtn = document.querySelector(".favorite_btn");
+    // favBtn.classList.remove("non-favorite");
+    // favBtn.innerHTML = "Unfav Restaurant";
+    const star = document.querySelector(".star");
+    star.style.color = "#ad034d";
+    star.classList.remove("non-favorite");
+  } else {
+    // const favBtn = document.querySelector(".favorite_btn");
+    // favBtn.innerHTML = "Fav Restaurant";
+    // favBtn.classList.add("non-favorite");
+    const star = document.querySelector(".star");
+    star.style.color = "#464444c7";
+    star.classList.add("non-favorite");
+
+  }
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
@@ -311,3 +329,63 @@ function loadGoogleMap() {
   buttonMap.removeEventListener("click", loadGoogleMap, false);
   return false;
 }
+document.querySelector(".star").addEventListener("click", function(event) {
+    if ("serviceWorker" in navigator && "SyncManager" in window) {
+      let flag;
+      if (this.classList.contains("non-favorite")) {
+        flag = true;
+        this.classList.remove("non-favorite");
+        this.style.color = "#ad034d";
+      } else {
+        flag = false;
+        this.classList.add("non-favorite");
+        this.style.color ="rgba(70, 68, 68, 0.781)";
+      }
+      navigator.serviceWorker.ready.then(function(sw) {
+        var fav = {
+          date: new Date().toISOString(),
+          favOrNot: flag,
+          id: restaurantId
+        };
+        writeData("favorite-rests", fav)
+          .then(function() {
+            return sw.sync.register("sync-favorites");
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
+      });
+    } else {
+   //   favoriteRest(event);
+    }
+  });
+
+  function favoriteRest(event) {
+    console.log(event.target);
+    console.log("hey");
+    var target1 = event.target;
+    console.log(target1.classList.contains("non-favorite"));
+    if (target1.classList.contains("non-favorite")) {
+      console.log("here!");
+      target1.innerHTML = "Unfav Restaurant";
+      target1.classList.remove("non-favorite");
+      const port = 1337; // Change this to your server port
+      const index = window.location.href.indexOf("=");
+      const id = window.location.href.slice(index + 1);
+      fetch(`http://localhost:${port}/restaurants/${id}/?is_favorite=true`, {
+        method: "put"
+      });
+      document.getElementsByClassName("star")[0].style.color = "#ad034d";
+    } else {
+      console.log("there!");
+      target1.innerHTML = "Fav Restaurant";
+      target1.classList.add("non-favorite");
+      const port = 1337; // Change this to your server port
+      const index = window.location.href.indexOf("=");
+      const id = window.location.href.slice(index + 1);
+      fetch(`http://localhost:${port}/restaurants/${id}/?is_favorite=false`, {
+        method: "put"
+      });
+      document.getElementsByClassName("star")[0].style.color ="rgba(70, 68, 68, 0.781)";
+    }
+  }

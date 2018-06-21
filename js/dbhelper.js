@@ -8,6 +8,9 @@ let dbPromise = idb.open("restaurants-store", 1, function(db) {
   if (!db.objectStoreNames.contains("sync-posts")) {
     db.createObjectStore("sync-posts", { keyPath: "date" });
   }
+  if (!db.objectStoreNames.contains("favorite-rests")) {
+    db.createObjectStore("favorite-rests", { keyPath: "date" });
+  }
 });
 
 class DBHelper {

@@ -140,5 +140,55 @@ importScripts("js/utility.js");
         })
       );
     }
+    if (event.tag === "sync-favorites") {
+      event.waitUntil(
+        readAllData("favorite-rests").then(function(data) {
+          for (var dt of data) {
+            const id = dt.id;
+            if (dt.favOrNot) {
+              fetch(
+                `http://localhost:1337/restaurants/${id}/?is_favorite=true`,
+                {
+                  method: "PUT",
+                  body: JSON.stringify({
+                    date: dt.date
+                  })
+                }
+              )
+                .then(function(res) {
+                  if (res.ok) {
+                    res.json().then(function(resData) {
+                      deleteItemFromData("favorite-rests", resData.date);
+                    });
+                  }
+                })
+                .catch(function(err) {
+                  console.log("Error while sending data", err);
+                });
+            } else {
+              fetch(
+                `http://localhost:1337/restaurants/${id}/?is_favorite=false`,
+                {
+                  method: "PUT",
+                  body: JSON.stringify({
+                    date: dt.date
+                  })
+                }
+              )
+                .then(function(res) {
+                  if (res.ok) {
+                    res.json().then(function(resData) {
+                      deleteItemFromData("favorite-rests", resData.date);
+                    });
+                  }
+                })
+                .catch(function(err) {
+                  console.log("Error while sending data", err);
+                });
+            }
+          }
+        })
+      );
+    }
   });
 })();
