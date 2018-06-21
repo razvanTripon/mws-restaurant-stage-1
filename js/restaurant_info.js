@@ -178,29 +178,40 @@ fillReviewsHTML = reviews => {
   });
   container.appendChild(ul);
 };
+
 createReviewHTML = review => {
   const li = document.createElement("li");
+  const tagArticle = document.createElement('article');
   const name = document.createElement("p");
   name.innerHTML = review.name;
+  name.setAttribute('aria-hidden', 'true');
   name.classList = "reviewer";
-  li.appendChild(name);
+  tagArticle.appendChild(name);
+  //li.appendChild(name);
   const date = document.createElement("p");
   let secDate = new Date(review.createdAt);
   date.innerHTML = secDate.toLocaleDateString();
-  li.appendChild(date);
+  date.setAttribute('aria-hidden', 'true');
+  tagArticle.appendChild(date);
+  //li.appendChild(date);
   const rating = document.createElement("p");
   rating.innerHTML = `Rating: ${review.rating}`;
   rating.className = "ratings";
-  li.appendChild(rating);
+  tagArticle.appendChild(rating);
+  tagArticle.setAttribute('role', 'article');
+  tagArticle.setAttribute('aria-label', `Evaluated by ${review.name} on ${secDate.toLocaleDateString()}`);
+  //li.appendChild(rating);
   const comments = document.createElement("p");
   comments.innerHTML = review.comments;
-  li.appendChild(comments);
+  tagArticle.appendChild(comments);
+  li.appendChild(tagArticle);
   return li;
 };
 fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById("breadcrumb");
   const li = document.createElement("li");
   li.innerHTML = restaurant.name;
+  li.setAttribute('aria-current', 'page');
   breadcrumb.appendChild(li);
 };
 getParameterByName = (name, url) => {

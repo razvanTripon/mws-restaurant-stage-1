@@ -144,9 +144,15 @@ createRestaurantHTML = restaurant => {
   li.append(address);
   const more = document.createElement("a");
   more.innerHTML = "View Restaurant Details";
+  more.setAttribute('aria-label', `More details on ${restaurant.name}`);
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more);
-  return li;
+
+  const tagDIV = document.createElement('div');
+  tagDIV.setAttribute('aria-label', `${restaurant.name}`);
+  tagDIV.append(li);
+
+  return tagDIV;
 };
 
 addMarkersToMap = (restaurants = self.restaurants) => {

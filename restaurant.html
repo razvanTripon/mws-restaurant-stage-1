@@ -23,7 +23,7 @@
       </ul>
     </nav>
     <section id="map-container">
-        <div id="map" role="application"></div>
+        <div id="map" role="application" aria-hidden="true" aria-describedby="map-help"></div>
       </section>
   </header>
   <section class="map-button">
@@ -38,7 +38,7 @@
         <p id="restaurant-cuisine"></p>
         <p id="restaurant-address"></p>
       </div>
-      <table id="restaurant-hours"></table>
+      <table id="restaurant-hours" aria-labelledby="openHours"></table>
     </section>
     <section id="reviews-container">
       <ul id="reviews-list"></ul>
@@ -48,11 +48,11 @@
         <div class="title-post">Post a Comment</div>
         <form id="post-message">
           <label for="reviewerName">Your Name:</label>
-          <input id="reviewerName" type="text" name="name" required>
+          <input id="reviewerName" type="text" name="name" required aria-label="Review Author Name" placeholder="Your Name">
           <label for="rating">Your Rate:</label>
-          <input id="rating" type="number" name="rating" min="0" max="5" required style="width: 100%" value="5">
+          <input id="rating" type="number" name="rating" min="0" max="5" required style="width: 100%" value="5" aria-label="Rating">
           <label for="comment">Your Comment:</label>
-          <textarea name="comments" id="comment" cols="30" rows="10" required style="width: 100%"></textarea>
+          <textarea name="comments" id="comment" cols="30" rows="10" required style="width: 100%" aria-label="Review" placeholder="Write your review here"></textarea>
           <input type="hidden" name="restaurant_id" id="restId">
           <input type="hidden" name="updatedAt" value="">
           <input type="submit" value="Submit" id="post-submit">
