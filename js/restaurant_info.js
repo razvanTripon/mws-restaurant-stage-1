@@ -355,37 +355,5 @@ document.querySelector(".star").addEventListener("click", function(event) {
             console.log(err);
           });
       });
-    } else {
-   //   favoriteRest(event);
     }
   });
-
-  function favoriteRest(event) {
-    console.log(event.target);
-    console.log("hey");
-    var target1 = event.target;
-    console.log(target1.classList.contains("non-favorite"));
-    if (target1.classList.contains("non-favorite")) {
-      console.log("here!");
-      target1.innerHTML = "Unfav Restaurant";
-      target1.classList.remove("non-favorite");
-      const port = 1337; // Change this to your server port
-      const index = window.location.href.indexOf("=");
-      const id = window.location.href.slice(index + 1);
-      fetch(`http://localhost:${port}/restaurants/${id}/?is_favorite=true`, {
-        method: "put"
-      });
-      document.getElementsByClassName("star")[0].style.color = "#ad034d";
-    } else {
-      console.log("there!");
-      target1.innerHTML = "Fav Restaurant";
-      target1.classList.add("non-favorite");
-      const port = 1337; // Change this to your server port
-      const index = window.location.href.indexOf("=");
-      const id = window.location.href.slice(index + 1);
-      fetch(`http://localhost:${port}/restaurants/${id}/?is_favorite=false`, {
-        method: "put"
-      });
-      document.getElementsByClassName("star")[0].style.color ="rgba(70, 68, 68, 0.781)";
-    }
-  }
